@@ -1,3 +1,13 @@
+##################################################
+## M5Hamote - A HomeAssistant remote on M5Paper
+##################################################
+## Author: @paeber
+## Github: https://github.com/paeber/m5paper-homeassistant-remote
+## Copyright: Copyright 2021, PaEber Electronics
+## Version: 1.0.0
+## Status: stable
+##################################################
+
 import urequests
 import json
 

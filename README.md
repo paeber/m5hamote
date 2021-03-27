@@ -10,6 +10,7 @@ UI for m5paper device to control a home assistant over rest and mqtt
 - [x] Read configuration from a file
 - [ ] Sleep mode and wakeup function
 - [ ] Time with leading zero
+- [ ] Fix icon names to match with mdi database
 
 ## Instructions
 

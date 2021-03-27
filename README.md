@@ -1,5 +1,5 @@
 # m5paper-homeassistant-remote
-![M5Hamote_Header](documentation\assets\M5Hamote_Header.jpg)
+![M5Hamote_Header](documentation/assets/M5Hamote_Header.jpg)
 
 UI for m5paper device to control a home assistant over rest and mqtt
 

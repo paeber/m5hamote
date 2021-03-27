@@ -1,7 +1,7 @@
-# m5paper-homeassistant-remote
+# M5Hamote
 ![M5Hamote_Header](documentation/assets/M5Hamote_Header.jpg)
 
-UI for m5paper device to control a home assistant over rest and mqtt
+A Home Assistant remote based on m5paper
 
 *This project is in no relation with [M5Stack](https://m5stack.com/) or [Home Assistant](https://www.home-assistant.io/). The icons used in this project are from [Material Design Icons (mdi)](https://github.com/Templarian/MaterialDesign). Feel free to use this project for your own non-comercial purposes.*
 

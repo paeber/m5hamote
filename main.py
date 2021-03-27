@@ -4,20 +4,37 @@ from uiflow import *
 from m5stack import touch
 import wifiCfg
 from m5mqtt import M5mqtt
+import json
 
 from HomeAssistant import HomeAssistant
 
 setScreenColor(15)
+lblLog = M5TextBox(10, 910, "-", lcd.FONT_DejaVu40, 0, rotate=0)
 
-DeviceState = None
+def setLogMessage(text):
+    lblLog.setText(str(text))
+    lcd.partial_show(0, 900, 300, 60)
+
+setLogMessage("Load config")
+
+DeviceState = {'time': False, 'v_bat': 0}
 touchNow = None
 touchOld = None
 
+f = open('secrets.json')
+M5Config = json.loads(f.read())
+f.close()
+
 # Setup connections and services
-wifiCfg.doConnect('ssid', 'password')
-HomeServer = HomeAssistant("url", "token")
-m5mqtt = M5mqtt('m5paper-homeremote', 'url', 1883, 'user', 'password', 300)
-statestream_base_topic = "home/statestream/"
+setLogMessage("Connect to " + M5Config['wifi']['ssid'])
+wifiCfg.doConnect(M5Config['wifi']['ssid'], M5Config['wifi']['pw'])
+while not wifiCfg.wlan_sta.isconnected():
+  pass
+setLogMessage("Connected")
+
+HomeServer = HomeAssistant(M5Config['hassio']['url'], M5Config['hassio']['token'])
+m5mqtt = M5mqtt('m5paper-homeremote', M5Config['mqtt']['url'], 1883, M5Config['mqtt']['usr'], M5Config['mqtt']['pw'], 300)
+statestream_base_topic = M5Config['mqtt']['base_topic']
 
 class IconButton:
     def __init__(self, icon, position, size):
@@ -45,7 +62,7 @@ class MediaPlayer:
     def __init__(self, entity, position):
         data = HomeServer.getJson(entity)
         print(data)
-        self.state = data['state']
+        self.state = data['state'] if 'state' in data else "-"
         name = data['attributes']['friendly_name']
         source = data['attributes']['source'] if 'source' in data['attributes'] else "-"
         media_title = data['attributes']['media_title'] if 'media_title' in data['attributes'] else "-"
@@ -163,6 +180,16 @@ class Light:
     def redraw(self):
         lcd.partial_show(self.pos[0], self.pos[1], self.size[0], self.size[1])
 
+def syncRtcFromHomeAssistant():
+    weekday = 6
+    date_time = HomeServer.getState("sensor.date_time")
+    date, time = date_time.split(", ")
+    #time = HomeServer.getState("sensor.time")
+    #date = HomeServer.getState("sensor.date")
+    date = date.split("-")
+    time = time.split(":")
+    rtc.set_datetime((int(date[0]), int(date[1]), int(date[2]), weekday, int(time[0]), int(time[1]), 0))
+    setLogMessage(HomeServer.getState("Time updated"))
 
 lblScreenName = M5TextBox(10, 10, "Office", lcd.FONT_DejaVu72, 0, rotate=0)
 rectHeader = M5Rect(0, 80, 540, 5, 0, 0)
@@ -183,7 +210,7 @@ ToggleButtons = [
     Light("light.pcb_backlight", (20, 290)),
     Light("light.monitor_riser", (190, 290)),
     Light("switch.office_spots", (360, 290)),
-    MediaPlayer("media_player.office", (20, 660))
+    MediaPlayer("media_player.schreibtisch", (20, 660))
 ]
 
 
@@ -235,14 +262,16 @@ def tHardwareManager():
     DeviceHandler()
     pass
 
+#syncRtcFromHomeAssistant()
 
-DeviceState = {'v_bat': 0}
 m5mqtt.start()
 lcd.show()
+
 
 timerSch.run('touch', 40, 0x00)
 timerSch.run('deviceManager', 10000, 0x00)
 timerSch.run('HardwareManager', 1000, 0x00)
 
+setLogMessage("Ready")
 
 

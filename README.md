@@ -1,10 +1,23 @@
 # m5paper-homeassistant-remote
+![M5Hamote_Header](M:\pictures\Tech\M5Hamote_Header.jpg)
+
 UI for m5paper device to control a home assistant over rest and mqtt
 
+*This project is in no relation with [M5Stack](https://m5stack.com/) or [Home Assistant](https://www.home-assistant.io/). The icons used in this project are from [Material Design Icons (mdi)](https://github.com/Templarian/MaterialDesign). Feel free to use this project for your own non-comercial purposes.*
+
 ## To-do
-- Read configuration from a file
+
+- [x] Read configuration from a file
+- [ ] Sleep mode and wakeup function
+- [ ] Time with leading zero
 
 ## Instructions
+
+Programming and device management is done with Visual Studio Code with M5Stack extension
+
+- Copy main.py and HomeAssistant.py to the root directory of the device
+- Copy icons to "res/*" 
+- Create "secret.json" with your credentials for wifi, home assistant and mqtt
 
 
 ## Idea

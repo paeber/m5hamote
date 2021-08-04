@@ -1,4 +1,10 @@
 # M5Hamote
+
+
+# IMPORTANT
+THE PROJECT IS ON HALT FOR NOW! The initial way of developing with VS Code is not possible anymore. Therefore the project is paused until I find a new way to use micropython on the M5Paper device. 
+
+
 ![M5Hamote_Header](documentation/assets/M5Hamote_Header.jpg)
 
 A Home Assistant remote based on m5paper

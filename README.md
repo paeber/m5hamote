@@ -15,7 +15,7 @@ A Home Assistant remote based on m5paper
 
 - [x] Read configuration from a file
 - [ ] Sleep mode and wakeup function
-- [ ] Time with leading zero
+- [x] Time with leading zero
 - [ ] Fix icon names to match with mdi database
 - [ ] Load secrets and icons from SD-Card 
 

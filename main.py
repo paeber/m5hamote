@@ -15,6 +15,7 @@ from m5stack import touch
 import wifiCfg
 from m5mqtt import M5mqtt
 import json
+import time
 
 from HomeAssistant import HomeAssistant
 import M5PaperUI
@@ -35,6 +36,12 @@ class dotdict(dict):
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
+
+
+setLogMessage("Boot")
+print("Wait 10 sec")
+wait(10)
+print("----- Start init ------")
 
 setLogMessage("Load config")
 
@@ -96,7 +103,11 @@ ToggleButtons = [
 # Update information in head section of the screen
 def HeadHandler():
     global DeviceState
-    lblTime.setText(str((str((rtc.datetime()[4])) + str((str(':') + str((rtc.datetime()[5])))))))
+    hours = str(rtc.datetime()[4])
+    minutes = str(rtc.datetime()[5])
+    if len(minutes) == 1:
+        minutes = "0" + minutes
+    lblTime.setText(str(hours + ':' + minutes))
     lcd.partial_show(410, 0, 150, 80)
 
 # Execute M5Paper relevant hardware tasks
@@ -118,25 +129,23 @@ def ttouch():
     touchNow = touch.read()
     if touchNow[3] != touchOld:
         if touchNow[3]:
-            print(touchNow[0], touchNow[1])
+            print("Touch:", (touchNow[0], touchNow[1]))
             for element in ToggleButtons:
                 element.scheduler((touchNow[0], touchNow[1]))
     touchOld = touchNow[3]
-    pass
 
 
 @timerSch.event('deviceManager')
 def tdeviceManager():
     global DeviceState
     HeadHandler()
-    pass
 
 
 @timerSch.event('HardwareManager')
 def tHardwareManager():
     global DeviceState
     DeviceHandler()
-    pass
+
 
 #syncRtcFromHomeAssistant()
 
@@ -148,5 +157,4 @@ timerSch.run('deviceManager', 10000, 0x00)
 timerSch.run('HardwareManager', 1000, 0x00)
 
 setLogMessage("Ready")
-
 

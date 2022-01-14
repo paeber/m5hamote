@@ -42,6 +42,7 @@ class IconButton(object):
 class MediaPlayer(object):
     # Display rectangle with media player status and controls
     def __init__(self, entity, position, services):
+        print("Init media")
         self.hassio = services.HomeServer
         self.mqtt = services.MqttServer
         data = self.hassio.getJson(entity)
@@ -133,6 +134,7 @@ class MediaPlayer(object):
 class Light(object):
     # Display rectangle with light status and toggle control
     def __init__(self, entity, position, services):
+        print("Init ", entity)
         self.hassio = services.HomeServer
         self.mqtt = services.MqttServer
         data = self.hassio.getJson(entity)
@@ -143,16 +145,18 @@ class Light(object):
         self.size = (150, 150)
         self.frame = M5Rect(self.pos[0], self.pos[1], self.size[0], self.size[1], 15, 0)
         self.icon = M5Img(self.pos[0] + self.size[0] - 50, self.pos[1] + 2, "res/ceil-lgt.jpg", True)
-        self.lblTitle = M5TextBox(self.pos[0] + 10, self.pos[1] + self.size[1] - 50, name, lcd.FONT_DejaVu40, 0,
-                                  rotate=0)
-        self.lblState = M5TextBox(self.pos[0] + 10, self.pos[1] + self.size[1] - 75, state, lcd.FONT_DejaVu24, 0,
-                                  rotate=0)
+        self.lblTitle = M5TextBox(self.pos[0] + 10, self.pos[1] + self.size[1] - 50, name, lcd.FONT_DejaVu40, 0, rotate=0)
+        self.lblState = M5TextBox(self.pos[0] + 10, self.pos[1] + self.size[1] - 75, state, lcd.FONT_DejaVu24, 0, rotate=0)
         entity_id = entity.split(".")
-        self.mqtt.subscribe(
-            str(services.Config['mqtt']['base_topic'] + str(entity_id[0]) + '/' + str(entity_id[1]) + '/state'),
-            self.mqtt_state)
+        entity_topic = str(services.Config['mqtt']['base_topic'] + str(entity_id[0]) + '/' + str(entity_id[1]) + '/state')
+        self.mqtt.subscribe(entity_topic, self.mqtt_state__)
+        print("Light:", self.entity, entity_topic)
 
-    def mqtt_state(self, topic_data):
+    def redraw(self):
+        lcd.partial_show(self.pos[0], self.pos[1], self.size[0], self.size[1])
+        print("Redraw " + str(self.entity))
+
+    def mqtt_state__(self, topic_data):
         self.lblState.setText(topic_data)
         self.redraw()
 
@@ -162,6 +166,7 @@ class Light(object):
 
     def action(self):
         self.hassio.call(self.entity, "toggle")
+        
 
     def isPressed(self, touch):
         if (self.pos[0] <= touch[0]) and (touch[0] <= (self.pos[0] + self.size[0])):
@@ -169,5 +174,5 @@ class Light(object):
                 return True
         return False
 
-    def redraw(self):
-        lcd.partial_show(self.pos[0], self.pos[1], self.size[0], self.size[1])
+    
+        

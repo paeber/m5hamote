@@ -26,6 +26,25 @@ Programming and device management is done with Visual Studio Code with M5Stack e
 - Copy icons to "res/*" 
 - Create "secret.json" with your credentials for wifi, home assistant and mqtt
 
+```json
+# Example secrets.json
+{
+	"wifi":{
+		"ssid": "WIFI_SSID",
+		"pw": "WIFI_PASSWORD"
+	},
+	"hassio": {
+		"url": "http://HOMEASSISTANT_IP:8123",
+		"token": "YOUR_TOKEN",
+	},
+	"mqtt": {
+		"url": "MQTT_IP",
+		"usr": "MQTT_USER",
+		"pw": "MQTT_PASSWORD"
+	}
+}
+```
+
 
 ## Idea
 The goal of this project is to provide an adaptable user interface for home assistant on the m5paper device. 

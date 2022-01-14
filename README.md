@@ -17,6 +17,7 @@ A Home Assistant remote based on m5paper
 - [ ] Sleep mode and wakeup function
 - [ ] Time with leading zero
 - [ ] Fix icon names to match with mdi database
+- [ ] Load secrets and icons from SD-Card 
 
 ## Instructions
 
@@ -40,7 +41,8 @@ Programming and device management is done with Visual Studio Code with M5Stack e
 	"mqtt": {
 		"url": "MQTT_IP",
 		"usr": "MQTT_USER",
-		"pw": "MQTT_PASSWORD"
+		"pw": "MQTT_PASSWORD",
+		"base_topic": "TOPIC/TO/STATESTREAM"
 	}
 }
 ```
